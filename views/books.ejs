@@ -1,0 +1,14 @@
+<%- include("partials/header.ejs") %>
+
+    <div class="container my-5">
+        <div class="row">
+            <% allBooks.forEach(book => { %>
+                <a href="books/<%= book.id %>" class="col-lg-3 col-md-4 d-flex flex-column align-items-center my-5 text-decoration-none book-mini">
+                    <img class="align-self-center rounded book-cover" src=<%= book.cover %> alt="<%= book.title %> Cover" width="170" height=250>
+                    <div class="text-white text-center my-3 fw-bold fs-5 w-75 text-truncate bg-success rounded px-3"><%= book.title %></div>
+                </a>
+            <% }); %>
+        </div>
+    </div>
+
+<%- include("partials/footer.ejs") %>

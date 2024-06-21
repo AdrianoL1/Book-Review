@@ -1,0 +1,28 @@
+<%- include("partials/header.ejs") %>
+
+    <% if (locals.bookStats) { %>
+        <main class="container min-vh-100">
+            <div class="row">
+                <div class="col col-md-auto my-5">
+                    <img class="rounded" src=<%= bookStats.cover %> alt="<%= bookStats.title %> Cover" width=230 height=340>
+                </div>
+                <div class="col col-md-8 my-5 border-bottom border-opacity-50">
+                    <h1 class="text-success fw-bold"><%= bookStats.title %></h1>
+                    <div class="mb-4"><span class="text-success">Rating: </span><%= bookStats.rating %>/10</div>
+                    <div class="fw-light ws-pw"><%= bookStats.description %></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="d-flex justify-content-center">
+                        <h2 class="text-center w-50 text-white rounded bg-success py-1">Review</h2>
+                    </div>
+                    <div class="my-4 ws-pw"><%= bookStats.review %></div>
+                </div>
+            </div>
+        </main>
+    <% } else { %>
+        <h1>ERROR</h1>
+    <% } %>
+
+<%- include("partials/footer.ejs") %>
