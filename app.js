@@ -2,7 +2,6 @@ import express from "express";
 import bodyParser  from "body-parser";
 import * as db from "./db/index.js";
 
-
 const app = express();
 const port = 3000;
 
@@ -14,7 +13,7 @@ app.use(express.static("public"));
 
 app.get("/", async (req, res) => {
     try {
-        const reviews = await db.query("SELECT * FROM books WHERE cover IS NOT NULL");
+        const reviews = await db.query("SELECT * FROM books");
         res.render("index.ejs", {reviews: reviews.rows});
     } catch (error) {
         console.log(error.message);
@@ -26,16 +25,18 @@ app.route("/addReview")
         res.render("add-review.ejs");
     })
     .post(async (req, res) => {
-        console.log(req.body);
         const bookTitle = req.body.bookTitle;
         const bookReview = req.body.bookReview;
         const bookRating = parseInt(req.body.bookRating);
         const bookCover = req.body.coverData;
         const bookDescription = req.body.bookDescription;
-        
-        const result = await db.query("INSERT INTO books (title, review, rating, cover, description) VALUES ($1, $2, $3, $4, $5)", [bookTitle, bookReview, bookRating, bookCover, bookDescription]);
-        console.log(result);
-        res.redirect("/");
+
+        try {
+            const result = await db.query("INSERT INTO books (title, review, rating, cover, description) VALUES ($1, $2, $3, $4, $5)", [bookTitle, bookReview, bookRating, bookCover, bookDescription]);
+            res.redirect("/");
+        } catch (error) {
+            console.log(error);
+        }
     });
 
 app.route("/editReview/:reviewId")
@@ -56,6 +57,7 @@ app.route("/editReview/:reviewId")
         const bookReview = req.body.bookReview;
         const bookRating = parseInt(req.body.bookRating);
         const bookCover = req.body.coverData;
+
         try {
             const updateReview = await db.query("UPDATE books SET title = $1, description = $2, rating = $3, cover = $4 WHERE books.id = $5", [bookTitle, bookReview, bookRating, bookCover, reviewId]);
             console.log("update: " + JSON.stringify(updateReview));
@@ -65,9 +67,9 @@ app.route("/editReview/:reviewId")
         }
     });
 
-app.post("/deleteReview/:reviewId", async (req, res) => {
+app.post("/deleteReview", async (req, res) => {
+    const reviewId = parseInt(req.body.reviewId);
     try {
-        const reviewId = parseInt(req.params.reviewId);
         const deleteReview = await db.query("DELETE FROM books WHERE books.id = $1", [reviewId]);
         res.send(deleteReview);
     } catch (error) {
@@ -76,24 +78,36 @@ app.post("/deleteReview/:reviewId", async (req, res) => {
 });
 
 app.get("/books", async (req, res) => {
+    const bookName = req.query.bookName;
+    if(bookName){
+        try {
+            const bookQuery = await db.query("SELECT title, cover, id FROM books WHERE title ILIKE '%' || $1 || '%'", [bookName]);
+            res.render("books.ejs", {books: bookQuery.rows});
+        } catch (error) {
+            console.log(error.message);
+        }
+    }else{
+        try {
+            const allBooks = await db.query("SELECT title, cover, id FROM books");
+            res.render("books.ejs", {books: allBooks.rows});
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+});
+
+app.get("/books/:bookId", async (req, res) => {
+    const bookId = req.params.bookId;
     try {
-        const allBooks = await db.query("SELECT title, cover, id FROM books");
-        console.log(allBooks.rows);
-        res.render("books.ejs", {allBooks: allBooks.rows});
+        const singleBook = await db.query("SELECT * FROM books b WHERE b.id = $1", [bookId]);
+        res.render("single-book.ejs", {bookStats: singleBook.rows[0], });
     } catch (error) {
         console.log(error.message);
     }
 });
 
-app.get("/books/:bookId", async (req, res) => {
-    try {
-        const bookId = req.params.bookId;
-        const singleBook = await db.query("SELECT * FROM books b WHERE b.id = $1", [bookId]);
-        res.render("single-book.ejs", {bookStats: singleBook.rows[0]});
-        console.log(singleBook.rows[0]);
-    } catch (error) {
-        console.log(error.message);
-    }
+app.all("*", async (req, res) => {
+    res.render("404.ejs");
 });
 
 app.listen(port, () => {
