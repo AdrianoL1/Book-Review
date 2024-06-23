@@ -1,7 +1,7 @@
 <%- include("partials/header.ejs") %>
 
-    <% if (locals.bookStats) { %>
-        <main class="container min-vh-100">
+    <main class="container min-vh-100">
+        <% if (locals.bookStats) { %>
             <div class="row">
                 <div class="col col-md-auto my-5">
                     <img class="rounded" src=<%= bookStats.cover %> alt="<%= bookStats.title %> Cover" width=230 height=340>
@@ -20,9 +20,9 @@
                     <div class="my-4 ws-pw"><%= bookStats.review %></div>
                 </div>
             </div>
-        </main>
-    <% } else { %>
-        <h1>ERROR</h1>
-    <% } %>
+        <% } else { %>
+            <h1 class="text-danger text-center my-5">Something went wrong, please try again!</h1>
+        <% } %>
+    </main>
 
 <%- include("partials/footer.ejs") %>

@@ -19,3 +19,9 @@
 .book-mini:hover{
     opacity: 50%;
 }
+
+@media screen and (min-width: 768px) {
+    #review-container{
+        text-align: unset !important;
+    }
+}

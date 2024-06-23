@@ -1,24 +1,28 @@
 <%- include('partials/header.ejs') %>
 
-    <main class="container">
-        <div class="row">
-            <div class="col-md">
-                <% reviews.forEach(review => { %>
-                    <div class="row my-3 py-5 border-bottom border-opacity-50">
-                        <div class="col-md-3 col-xl-2 me-1">
-                            <img class="rounded" src=<%= review.cover %> alt="Book Cover" width=170 height=250>
-                        </div>
+    <main class="container min-vh-100">
+        <% if (locals.reviews && locals.reviews.length !== 0) { %>
+            <div class="row">
+                <div class="col-md text-center" id="review-container">
+                    <% reviews.forEach(review => { %>
+                        <div class="row my-3 py-5 border-bottom border-opacity-50">
+                            <div class="col-md-3 col-xl-2 me-1">
+                                <img class="rounded" src=<%= review.cover %> alt="Book Cover" width=170 height=250>
+                            </div>
 
-                        <div class="col col-lg-8">
-                            <div class="fs-2 fw-bold text-success text-truncate"><%= review.title %></div>
-                            <div class="mb-4"><span class="text-success">Rating:</span> <%= review.rating %>/10</div>
-                            <div class="fw-light text-t-3 ws-pw">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas interdum urna sed arcu molestie, eu consectetur dolor maximus. Nam lobortis ex sed leo pulvinar, ut blandit purus ullamcorper. In hac habitasse platea dictumst. Vestibulum ac nisl vel eros convallis vestibulum eu a elit. Vestibulum ac nisl vel eros convallis vestibulum eu a elit.</div>
-                            <div><a href="books/<%= review.id %>"><button class="btn btn-success my-3">See full review</button></a></div>
+                            <div class="col col-lg-8">
+                                <div class="fs-2 fw-bold text-success text-truncate"><%= review.title %></div>
+                                <div class="mb-4"><span class="text-success">Rating:</span> <%= review.rating %>/10</div>
+                                <div class="fw-light text-t-3 ws-pw"><%= review.description %></div>
+                                <div><a href="books/<%= review.id %>"><button class="btn btn-success my-3">See full review</button></a></div>
+                            </div>
                         </div>
-                    </div>
-                <% }); %>
+                    <% }); %>
+                </div>
             </div>
-        </div>
+        <% } else{ %>
+            <h1 class="text-danger text-center my-5">Error displaying reviews, please try again!</h1>
+        <% } %>  
     </main>
 
 <%- include('partials/footer.ejs') %>
