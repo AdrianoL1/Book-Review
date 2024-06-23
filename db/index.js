@@ -1,10 +1,11 @@
 import pg from 'pg';
+import 'dotenv/config'
 
 const client = new pg.Client({
     user: "postgres",
     host: "localhost",
     database: "dbBookReviews",
-    password: "",
+    password: process.env.dbPassword,
     port: 5432
 });
 
