@@ -39,41 +39,32 @@ app.route("/addReview")
         }
     });
 
-app.route("/editReview/:reviewId")
-    .get(async (req, res) => {
-        const reviewId = req.params.reviewId;
-        try {
-            const oldReview = await db.query("SELECT * FROM books WHERE id = $1", [reviewId]);
-            res.render("add-review.ejs", {oldReview: oldReview.rows[0]})
-            console.log(oldReview.rows[0]);
-        } catch (error) {
-            console.log(error.message);
-        }
-    })
-    .post(async (req, res) => {
-        const reviewId = req.params.reviewId;
+app.patch("/editReview", async (req, res) => {
+    const reviewId = req.body.reviewId;
 
-        const bookTitle = req.body.bookTitle;
-        const bookReview = req.body.bookReview;
-        const bookRating = parseInt(req.body.bookRating);
-        const bookCover = req.body.coverData;
+    const bookTitle = req.body.bookTitle;
+    const bookDescription = req.body.bookDescription;
+    const bookReview = req.body.bookReview;
+    const bookRating = parseInt(req.body.bookRating);
+    const bookCover = req.body.coverData;
 
-        try {
-            const updateReview = await db.query("UPDATE books SET title = $1, description = $2, rating = $3, cover = $4 WHERE books.id = $5", [bookTitle, bookReview, bookRating, bookCover, reviewId]);
-            console.log("update: " + JSON.stringify(updateReview));
-            res.redirect("/");
-        } catch (error) {
-           console.log(error.message); 
-        }
-    });
+    try {
+        const updateReview = await db.query("UPDATE books SET title = $1, description = $2, rating = $3, cover = $4, review = $5 WHERE books.id = $6", [bookTitle, bookDescription, bookRating, bookCover, bookReview, reviewId]);
+        res.sendStatus(200);
+    } catch (error) {
+        console.log(error.message);
+        res.sendStatus(500); 
+    }
+});
 
-app.post("/deleteReview", async (req, res) => {
+app.delete("/deleteReview", async (req, res) => {
     const reviewId = parseInt(req.body.reviewId);
     try {
         const deleteReview = await db.query("DELETE FROM books WHERE books.id = $1", [reviewId]);
-        res.send(deleteReview);
+        res.sendStatus(200);
     } catch (error) {
         console.log(error.message);
+        res.sendStatus(500);
     }
 });
 
