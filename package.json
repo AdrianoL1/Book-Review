@@ -11,9 +11,9 @@
   "name": "bookreview",
   "version": "1.0.0",
   "description": "Book reviews system",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "install": "node db/setup.js"
   },
   "author": "Holanddez",
   "license": "ISC",
