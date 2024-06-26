@@ -7,8 +7,7 @@ Web Application where users can read and create book reviews.
 
 **PostgreSQL 16 or higher is required.** <br>
 
-To install all packages and setup the database, just run the command: <br>
-`npm install`
+To install all packages and setup the database, just run the command: `npm install`
 
 # TODO
 
